@@ -78,9 +78,9 @@ class Picker:
             return( False )
 
         ret_s = filter(lambda x: x["selected"], self.all_options)
-        ret = map(lambda x: x["label"], ret_s)
+        ret = map(lambda x: x["result"], ret_s)
         return( list(ret) )
-
+        
     def text(self, y, x, label):
         try:
             self.win.addstr(y, x, label)
@@ -217,6 +217,11 @@ class Picker:
                     not self.all_options[self.selected]["selected"]
             elif c == 10:
                 break
+            elif c in self.hotkeyOptions:
+                    self.cursor = self.hotkeyOptions[c]
+                    self.selected = self.hotkeyOptions[c]
+                    self.all_options[self.selected]["selected"] = \
+                        not self.all_options[self.selected]["selected"]
 
             # compute selected position only after dealing with limits
             self.selected = self.cursor + self.offset
@@ -244,11 +249,23 @@ class Picker:
         self.c_empty = c_empty
         
         self.all_options = []
+        self.hotkeyOptions = {}
+
+        hotkeys="1234567890abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPRSTUVWXYZ"
         
-        for option in options:
+        for n,option in enumerate(options):
+            if n < 20:
+                hotkey = hotkeys[n]
+                label = '(' + hotkey + ') ' + option
+                self.hotkeyOptions[ord(hotkey)] = n
+            else:
+                hotkey = ""
+                label = option
             self.all_options.append({
-                "label": option,
-                "selected": False
+                "label": label,
+                "result": option,
+                "selected": False,
+                "hotkey": hotkey
             })
             self.length = len(self.all_options)
         
