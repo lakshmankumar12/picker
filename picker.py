@@ -254,7 +254,7 @@ class Picker:
         hotkeys="1234567890abcdefghijklmnoprstuvwxyzABCDEFGHIJKLMNOPRSTUVWXYZ"
         
         for n,option in enumerate(options):
-            if n < 20:
+            if n < len(hotkeys):
                 hotkey = hotkeys[n]
                 label = '(' + hotkey + ') ' + option
                 self.hotkeyOptions[ord(hotkey)] = n
